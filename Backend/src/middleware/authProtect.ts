@@ -29,7 +29,7 @@ import jwt, {
       const decoded = await jwt.verify(accessToken, jwtSecret) as JwtPayload;
       
       if (req.params.id) {
-        const todo = await Todo.findOne({ _id: req.params.id, userId: decoded.id });
+        const todo = await Todo.findOne({ userId: decoded.id });
   
         if (!todo) {
           return res.status(403).json({
@@ -41,6 +41,7 @@ import jwt, {
   
       req.user = decoded;
       return next();
+      
     } catch (err) {
       if (err instanceof TokenExpiredError) {
         return res.status(401).json({
